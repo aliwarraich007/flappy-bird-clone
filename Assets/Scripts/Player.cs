@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] Sprite[] sprites;
 
+    [SerializeField] GameHandler gameHandler;
+
     int spriteIndex = 0;
 
     // calls first time when this game object is activated
@@ -55,4 +57,12 @@ public class Player : MonoBehaviour
         direction.y += gravity * Time.deltaTime;
         transform.position += direction * Time.deltaTime;
     }
+
+    private void OnTriggerEnter2D (Collider2D other)
+    {
+        Debug.Log("Collision enter");
+        if(other.gameObject.CompareTag("Obstacle"))  { gameHandler.GameOver(); }
+        else if(other.gameObject.CompareTag("Score")) { gameHandler.IncScore(); }
+    }
+
 }

@@ -1,0 +1,65 @@
+#score-container {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#highscore-panel {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: none; /* shown on game over */
+}
+
+#highscore-container {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.digit {
+    width: 40px;
+    height: 50px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#highscore-container .digit {
+    width: 24px;
+    height: 30px;
+}
+
+#play-btn {
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    top: 20%;
+    bottom: 20%;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/flappy-bird/sprites/message.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#play-btn:hover,
+#play-btn:active,
+#play-btn:focus {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* don't let the score areas eat clicks */
+#score-container,
+#highscore-panel {
+}
+
+#flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: between;
+}

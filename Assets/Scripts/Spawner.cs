@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    private GameObject prefabs;
-    private float spawnRate = 1f;
-    private float minHeight = -1f;
-    private float maxHeight = 1f;
+   [SerializeField] private GameObject prefabs;
+   [SerializeField] private float spawnRate = 1f;
+   [SerializeField] private float minHeight = -1f;
+   [SerializeField] private float maxHeight = 1f;
 
 
     private void OnEnable() {
