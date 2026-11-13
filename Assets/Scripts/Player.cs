@@ -14,6 +14,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] GameHandler gameHandler;
 
+    [SerializeField] float fallSoundThreshold = -2f;
+
+    [SerializeField] AudioClip die, swoosh, flap, score;
+    private AudioSource audioSource;
+    private AudioSource swooshSource;
+
     int spriteIndex = 0;
 
     // calls first time when this game object is activated
@@ -27,6 +33,11 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        swooshSource = gameObject.AddComponent<AudioSource>();
+        swooshSource.clip = swoosh;
+        swooshSource.loop = true;
+        swooshSource.playOnAwake = false;
         InvokeRepeating("animateBird", 0.15f, 0.15f);
     }
 
@@ -40,29 +51,52 @@ public class Player : MonoBehaviour
     }
 
 
-    // calls every frame
     void Update() {
-    
-        if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            direction = Vector3.up * floatStrength;
+        if (!gameHandler.IsPlaying) {
+            SetSwoosh(false);
+            return;
         }
 
-        if(Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
-        {
-            direction = Vector3.up * floatStrength;
+        bool touched = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame || 
+            Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
 
-        }
+        if (touched)
+        {
+            PlaySound(flap);
+            direction = Vector3.up * floatStrength;
+        } 
 
         direction.y += gravity * Time.deltaTime;
         transform.position += direction * Time.deltaTime;
+        SetSwoosh(direction.y < fallSoundThreshold);
     }
 
     private void OnTriggerEnter2D (Collider2D other)
     {
-        Debug.Log("Collision enter");
-        if(other.gameObject.CompareTag("Obstacle"))  { gameHandler.GameOver(); }
-        else if(other.gameObject.CompareTag("Score")) { gameHandler.IncScore(); }
+
+        if (!gameHandler.IsPlaying) return;
+
+        if(other.gameObject.CompareTag("Obstacle"))  { 
+            gameHandler.GameOver();
+            PlaySound(die);
+        }
+        else if(other.gameObject.CompareTag("Score")) { 
+            gameHandler.IncScore();
+            PlaySound(score);
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+        
+    }
+
+    private void SetSwoosh(bool falling) {
+
+        if (falling && !swooshSource.isPlaying) swooshSource.Play();
+        else if (!falling && swooshSource.isPlaying) swooshSource.Stop();
+
     }
 
 }

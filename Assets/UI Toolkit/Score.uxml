@@ -1,10 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/Score.uss?fileID=7433441132597879392&amp;guid=4a62bd1856cb38646819c09aaed211ba&amp;type=3#Score"/>
+       <ui:VisualElement name="highscore-panel">
+            <ui:VisualElement name="highscore-container"/>
+        </ui:VisualElement>
     <ui:VisualElement name="flex-container">
         <ui:VisualElement name="score-container"/>
-        <ui:VisualElement name="highscore-panel">
-    </ui:VisualElement>
-        <ui:VisualElement name="highscore-container"/>
     </ui:VisualElement>
     <ui:Button text="" name="play-btn" style="background-image: url(&quot;project://database/Assets/flappy-bird/sprites/message.png?fileID=2800000&amp;guid=a6933fdef1aee5a428afd9854eff622d&amp;type=3#message&quot;);"/>
+    <ui:VisualElement name="game-over">
+        <ui:VisualElement name="game-over-image" style="background-image: url(&quot;project://database/Assets/flappy-bird/sprites/gameover.png?fileID=2800000&amp;guid=fd8209c9cd85f5144ad6a37169720d19&amp;type=3#gameover&quot;);"/>
+    </ui:VisualElement>
 </ui:UXML>

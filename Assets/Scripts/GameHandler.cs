@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameHandler : MonoBehaviour
 {
@@ -13,28 +14,46 @@ public class GameHandler : MonoBehaviour
     private int score;
     private int highScore;
 
+    private AudioSource audioSource;
+    [SerializeField] AudioClip hit;
+    [SerializeField] private float playButtonDelay = 1.5f;
+    private Coroutine playButtonCoroutine;
+    private static bool autoStartNextLoad;
+
     void OnEnable() => scoreUI.PlayClicked += OnPlayClicked;
     void OnDisable() => scoreUI.PlayClicked -= OnPlayClicked;
 
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
-
-        Time.timeScale = 0f;            // freeze everything until Play
-        IsPlaying = false;
-        isGameOver = false;
-
+        FreezeGame();
+        scoreUI.SetHighScore(highScore);
         scoreUI.UpdateScore(0);
-        scoreUI.ShowPlayButton(true);
+        scoreUI.ShowGameOver(false);
+
+        if (autoStartNextLoad)
+        {
+            autoStartNextLoad = false;
+            StartGame();
+        }
+        else
+        {
+            scoreUI.ShowPlayButton(true);
+        }
     }
 
     private void OnPlayClicked()
     {
-        Debug.Log("Play clicked");      // remove once it works
+        audioSource.PlayOneShot(hit);
 
         if (isGameOver)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            autoStartNextLoad = true;
+            SceneManager.LoadScene(
+                SceneManager.GetActiveScene().buildIndex
+            );
             return;
         }
 
@@ -44,13 +63,20 @@ public class GameHandler : MonoBehaviour
     private void StartGame()
     {
         IsPlaying = true;
+        isGameOver = false;
         score = 0;
 
-        scoreUI.UpdateScore(0);
-        scoreUI.HideHighScore();
-        scoreUI.ShowPlayButton(false);
+        if (playButtonCoroutine != null)
+        {
+            StopCoroutine(playButtonCoroutine);
+            playButtonCoroutine = null;
+        }
 
-        Time.timeScale = 1f;            // unfreeze
+        scoreUI.UpdateScore(0);
+        scoreUI.ShowPlayButton(false);
+        scoreUI.ShowGameOver(false);
+
+        Time.timeScale = 1f;
     }
 
     public void IncScore()
@@ -62,18 +88,45 @@ public class GameHandler : MonoBehaviour
 
     public void GameOver()
     {
-        if (isGameOver) return;         // guard against repeated collisions
+        if (isGameOver) return;
+
+        FreezeGame();
+
         isGameOver = true;
         IsPlaying = false;
 
         if (score > highScore)
         {
             highScore = score;
+
             PlayerPrefs.SetInt(HighScoreKey, highScore);
             PlayerPrefs.Save();
         }
 
         scoreUI.ShowHighScore(highScore);
-        scoreUI.ShowPlayButton(true);
+        scoreUI.ShowGameOver(true);
+        scoreUI.ShowPlayButton(false);
+        if (playButtonCoroutine != null)
+            StopCoroutine(playButtonCoroutine);
+        playButtonCoroutine = StartCoroutine(ShowPlayButtonAfterDelay());
     }
+
+
+    private void FreezeGame()
+    {
+        Time.timeScale = 0f;            
+        IsPlaying = false;
+        isGameOver = false;
+    }
+
+    private IEnumerator ShowPlayButtonAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(playButtonDelay);
+
+        scoreUI.ShowGameOver(false);
+        scoreUI.ShowPlayButton(true);
+
+        playButtonCoroutine = null;
+    }
+
 }
