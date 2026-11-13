@@ -499,8 +499,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
-    height: 1
+    width: 1.09
+    height: 1.69
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -529,9 +529,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 3.824844, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalScale: {x: 3.82, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2128148588}
@@ -719,6 +719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameHandler
   scoreUI: {fileID: 1671227571}
   hit: {fileID: 8300000, guid: 426b44854964d1547a09cad43690d0b6, type: 3}
+  playButtonDelay: 1.5
 --- !u!4 &1279219724
 Transform:
   m_ObjectHideFlags: 0
@@ -877,7 +878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   prefabs: {fileID: 3127053644475948799, guid: 6c04ef02361a32745bd66937b8b35f78, type: 3}
   spawnRate: 2
-  minHeight: -6
+  minHeight: -5
   maxHeight: 0
 --- !u!1 &1671227568
 GameObject:
